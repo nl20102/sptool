@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\Eterlogic.com\Virtual Serial Ports Emulator\VSPEmulator.exe" "D:\Yury\projects\sptool\test-sptool\integration_testing.vspe" -minimize -hide_splash

@@ -1,0 +1,43 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(sptool)
+
+set(gtest_force_shared_crt ON)
+enable_testing()
+
+set (CMAKE_CXX_STANDART 17)
+set (CMAKE_CXX_STANDART_REQUIRED ON)
+if(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+endif(MSVC)
+
+# set(Boost_DEBUG 1)
+# set(Boost_USE_STATIC_LIBS ON)
+# set(Boost_USE_MULTITHREADED ON)
+set(Boost_ARCHITECTURE -x64)
+cmake_policy(SET CMP0074 NEW)
+find_package (Boost COMPONENTS program_options date_time regex thread REQUIRED)
+message(status "** Boost Include: ${Boost_INCLUDE_DIR}")
+message(status "** Boost Library dirs: ${Boost_LIBRARY_DIRS}")
+message(status "** Boost Libraries: ${Boost_LIBRARIES}")
+include_directories(${Boost_INCLUDE_DIR})
+link_directories(${Boost_LIBRARIES})
+
+add_subdirectory(spcore)
+add_subdirectory(googletest)
+add_subdirectory(test-sptool)
+
+file(GLOB folder_source *.cpp)
+file(GLOB folder_header *.h)
+source_group("Source Files" FILES ${folder_source})
+source_group("Header Files" FILES ${folder_header})
+message("main folder_source: " ${folder_source})
+add_executable (${PROJECT_NAME} ${folder_source} ${folder_header})
+set_property (TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
+set_property (TARGET ${PROJECT_NAME} PROPERTY D_WIN32_WINNT 0x0601)
+
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} spcore)
+target_include_directories(${PROJECT_NAME} PRIVATE ./spcore)
